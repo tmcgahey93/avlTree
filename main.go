@@ -1,23 +1,52 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+)
 
 type Node[T any] struct {
-	Value T
-	Next  *Node[T]
-	Prev  *Node[T]
+	Value         T
+	BalanceFactor int
+	Parent        *Node[T]
+	RightChild    *Node[T]
+	LeftChild     *Node[T]
 }
 
 func main() {
 	// Create a new node
-	node := &Node[int]{Value: 42}
 
-	// Create another node and link it to the first one
-	node2 := &Node[int]{Value: 84, Prev: node}
-	node.Next = node2
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: go run avlTree.go <file_name>")
+		return
+	}
 
-	// Print the values of the nodes
-	fmt.Println("First Node Value:", node.Value)
-	fmt.Println("Second Node Value:", node.Next.Value)
-	fmt.Println("Second Node's Previous Value:", node.Next.Prev.Value)
+	// Parse size from command-line argument
+	fileName := os.Args[1]
+
+	numberSlice, err := readFile(fileName)
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return
+	}
+
+	fmt.Println(numberSlice)
+}
+
+func readFile(filename string) ([]byte, error) {
+	// Open the file
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	// Read the file content
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+
+	return content, nil
 }
