@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type Node[T any] struct {
@@ -48,7 +49,20 @@ func main() {
 
 	}
 
-	fmt.Println("Root Node Value:", rootNode.Value)
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("Enter a number: ")
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSpace(input)
+
+	searchNum, err := strconv.Atoi(input)
+	if err != nil {
+		fmt.Println("Invalid number")
+	} else {
+		fmt.Println("You entered:", searchNum)
+	}
+
+	breadthSearch(rootNode, searchNum)
 }
 
 func readFile(filename string) ([]int, error) {
@@ -99,4 +113,8 @@ func insertNode[T int](root *Node[T], newNode *Node[T]) {
 		root = root.RightChild
 		insertNode(root, newNode)
 	}
+}
+
+func breadthSearch[T int](root *Node[T], searchNum int) {
+	fmt.Println("Breadth Search Not Completed")
 }
