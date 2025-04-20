@@ -47,6 +47,8 @@ func main() {
 		insertNode(rootNode, node)
 
 	}
+
+	fmt.Println("Root Node Value:", rootNode.Value)
 }
 
 func readFile(filename string) ([]int, error) {
