@@ -63,6 +63,8 @@ func main() {
 	}
 
 	breadthSearch(rootNode, searchNum)
+
+	depthSearch(rootNode, searchNum)
 }
 
 func readFile(filename string) ([]int, error) {
@@ -117,4 +119,8 @@ func insertNode[T int](root *Node[T], newNode *Node[T]) {
 
 func breadthSearch[T int](root *Node[T], searchNum int) {
 	fmt.Println("Breadth Search Not Completed")
+}
+
+func depthSearch[T int](root *Node[T], searchNum int) {
+	fmt.Println("Depth Search Not Completed")
 }
