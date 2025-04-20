@@ -1,17 +1,17 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io/ioutil"
 	"os"
+	"strconv"
 )
 
 type Node[T any] struct {
-	Value         T
-	BalanceFactor int
-	Parent        *Node[T]
-	RightChild    *Node[T]
-	LeftChild     *Node[T]
+	Value      T
+	Parent     *Node[T]
+	RightChild *Node[T]
+	LeftChild  *Node[T]
 }
 
 func main() {
@@ -32,21 +32,69 @@ func main() {
 	}
 
 	fmt.Println(numberSlice)
+
+	var rootNode *Node[int]
+
+	for i := 0; i < len(numberSlice); i++ {
+		node := &Node[int]{Value: numberSlice[i]}
+		fmt.Println("Node created with value:", node.Value)
+
+		if i == 0 {
+			rootNode = node
+			continue
+		}
+
+		insertNode(rootNode, node)
+
+	}
 }
 
-func readFile(filename string) ([]byte, error) {
+func readFile(filename string) ([]int, error) {
+
 	// Open the file
 	file, err := os.Open(filename)
 	if err != nil {
+		fmt.Println("Error opening file:", err)
 		return nil, err
 	}
 	defer file.Close()
 
-	// Read the file content
-	content, err := ioutil.ReadAll(file)
-	if err != nil {
+	var numbers []int
+
+	// Create a scanner to read line by line
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		num, err := strconv.Atoi(line)
+		if err != nil {
+			fmt.Println("Invalid number:", line)
+			continue
+		}
+		numbers = append(numbers, num)
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error reading file:", err)
 		return nil, err
 	}
 
-	return content, nil
+	return numbers, nil
+}
+
+func insertNode[T int](root *Node[T], newNode *Node[T]) {
+	if newNode.Value < root.Value {
+		if root.LeftChild == nil {
+			root.LeftChild = newNode
+			newNode.Parent = root
+		} else {
+			root = root.LeftChild
+			insertNode(root, newNode)
+		}
+	} else if root.RightChild == nil {
+		root.RightChild = newNode
+		newNode.Parent = root
+	} else {
+		root = root.RightChild
+		insertNode(root, newNode)
+	}
 }
