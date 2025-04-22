@@ -62,7 +62,7 @@ func main() {
 		fmt.Println("You entered:", searchNum)
 	}
 
-	breadthSearch(rootNode, searchNum)
+	//breadthSearch(rootNode, searchNum)
 
 	depthSearch(rootNode, searchNum)
 }
@@ -117,10 +117,28 @@ func insertNode[T int](root *Node[T], newNode *Node[T]) {
 	}
 }
 
-func breadthSearch[T int](root *Node[T], searchNum int) {
-	fmt.Println("Breadth Search Not Completed")
-}
+//func breadthSearch[T int](root *Node[T], searchNum int) {
+//fmt.Println("Breadth Search Not Completed")
+//}
 
-func depthSearch[T int](root *Node[T], searchNum int) {
-	fmt.Println("Depth Search Not Completed")
+func depthSearch[T int](currentNode *Node[T], searchNum T) {
+
+	if currentNode.Value == searchNum {
+		fmt.Println("Value Found")
+		return //need to return path
+	} else if searchNum < currentNode.Value {
+		//Traverse left branch
+		if currentNode.LeftChild != nil {
+			depthSearch(currentNode.LeftChild, searchNum)
+		} else {
+			//Not Found
+		}
+	} else {
+		//Travere right branch
+		if currentNode.RightChild != nil {
+			depthSearch(currentNode.RightChild, searchNum)
+		} else {
+			//Not Found
+		}
+	}
 }
