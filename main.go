@@ -123,15 +123,19 @@ func insertNode[T int](root *Node[T], newNode *Node[T]) {
 
 func depthSearch[T int](currentNode *Node[T], searchNum T) {
 
+	fmt.Println(currentNode.Value)
+
 	if currentNode.Value == searchNum {
 		fmt.Println("Value Found")
-		return //need to return path
+		return //need to return search path
 	} else if searchNum < currentNode.Value {
 		//Traverse left branch
 		if currentNode.LeftChild != nil {
 			depthSearch(currentNode.LeftChild, searchNum)
 		} else {
 			//Not Found
+			fmt.Println("Value Not Found")
+			return
 		}
 	} else {
 		//Travere right branch
@@ -139,6 +143,8 @@ func depthSearch[T int](currentNode *Node[T], searchNum T) {
 			depthSearch(currentNode.RightChild, searchNum)
 		} else {
 			//Not Found
+			fmt.Println("Value Not Found")
+			return
 		}
 	}
 }
