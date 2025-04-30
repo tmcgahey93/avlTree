@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
 	"golang.org/x/exp/constraints"
 )
 
@@ -63,9 +64,11 @@ func main() {
 		fmt.Println("You entered:", searchNum)
 	}
 
-	//breadthSearch(rootNode, searchNum)
+	searchSlice := []*Node[int]{rootNode}
 
-	depthSearch(rootNode, searchNum)
+	breadthSearch(searchSlice, searchNum)
+
+	//depthSearch(rootNode, searchNum)
 }
 
 func readFile(filename string) ([]int, error) {
@@ -118,16 +121,38 @@ func insertNode[T int](root *Node[T], newNode *Node[T]) {
 	}
 }
 
-//func breadthSearch[T int](root *Node[T], searchNum int) {
-//fmt.Println("Breadth Search Not Completed")
-//}
+func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
+
+	if len(searchSlice) == 0 {
+		fmt.Println("Breadth Search Value Not Found")
+		return
+	}
+
+	if searchSlice[0].Value == searchNum {
+		fmt.Println("Breadth Search Value Found")
+	} else {
+
+		fmt.Printf("Breadth Search Current Value: %v\n", searchSlice[0].Value)
+
+		if searchSlice[0].LeftChild != nil {
+			searchSlice = append(searchSlice, searchSlice[0].LeftChild)
+		}
+
+		if searchSlice[0].RightChild != nil {
+			searchSlice = append(searchSlice, searchSlice[0].RightChild)
+		}
+
+		searchSlice = searchSlice[1:]
+		breadthSearch(searchSlice, searchNum)
+	}
+}
 
 func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 
 	fmt.Println(currentNode.Value)
 
 	if currentNode.Value == searchNum {
-		fmt.Println("Value Found")
+		fmt.Println("Depth Search Value Found")
 		return //need to return search path
 	} else if searchNum < currentNode.Value {
 		//Traverse left branch
@@ -135,7 +160,7 @@ func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 			depthSearch(currentNode.LeftChild, searchNum)
 		} else {
 			//Not Found
-			fmt.Println("Value Not Found")
+			fmt.Println("Depth Search Value Not Found")
 			return
 		}
 	} else {
@@ -144,7 +169,7 @@ func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 			depthSearch(currentNode.RightChild, searchNum)
 		} else {
 			//Not Found
-			fmt.Println("Value Not Found")
+			fmt.Println("Depth Search Value Not Found")
 			return
 		}
 	}
