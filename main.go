@@ -149,7 +149,7 @@ func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
 
 func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 
-	fmt.Println(currentNode.Value)
+	fmt.Printf("Depth Search Current Value: %v\n", currentNode.Value)
 
 	if currentNode.Value == searchNum {
 		fmt.Printf("Depth Search Value Not Found: %v\n", searchNum)
