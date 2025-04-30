@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"golang.org/x/exp/constraints"
 )
 
 type Node[T any] struct {
@@ -121,7 +122,7 @@ func insertNode[T int](root *Node[T], newNode *Node[T]) {
 //fmt.Println("Breadth Search Not Completed")
 //}
 
-func depthSearch[T int](currentNode *Node[T], searchNum T) {
+func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 
 	fmt.Println(currentNode.Value)
 
