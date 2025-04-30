@@ -68,7 +68,7 @@ func main() {
 
 	breadthSearch(searchSlice, searchNum)
 
-	//depthSearch(rootNode, searchNum)
+	depthSearch(rootNode, searchNum)
 }
 
 func readFile(filename string) ([]int, error) {
@@ -124,7 +124,7 @@ func insertNode[T int](root *Node[T], newNode *Node[T]) {
 func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
 
 	if len(searchSlice) == 0 {
-		fmt.Println("Breadth Search Value Not Found")
+		fmt.Printf("Breadth Search Value Not Found: %v\n", searchNum)
 		return
 	}
 
@@ -152,7 +152,7 @@ func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 	fmt.Println(currentNode.Value)
 
 	if currentNode.Value == searchNum {
-		fmt.Println("Depth Search Value Found")
+		fmt.Printf("Depth Search Value Not Found: %v\n", searchNum)
 		return //need to return search path
 	} else if searchNum < currentNode.Value {
 		//Traverse left branch
