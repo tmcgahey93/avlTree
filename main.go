@@ -12,13 +12,13 @@ import (
 
 type Node[T any] struct {
 	Value      T
+	Height     int
 	Parent     *Node[T]
 	RightChild *Node[T]
 	LeftChild  *Node[T]
 }
 
 func main() {
-	// Create a new node
 
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: go run avlTree.go <file_name>")
@@ -39,7 +39,7 @@ func main() {
 	var rootNode *Node[int]
 
 	for i := 0; i < len(numberSlice); i++ {
-		node := &Node[int]{Value: numberSlice[i]}
+		node := &Node[int]{Value: numberSlice[i], Height: 0}
 		fmt.Println("Node created with value:", node.Value)
 
 		if i == 0 {
@@ -103,21 +103,19 @@ func readFile(filename string) ([]int, error) {
 	return numbers, nil
 }
 
-func insertNode[T int](root *Node[T], newNode *Node[T]) {
-	if newNode.Value < root.Value {
-		if root.LeftChild == nil {
-			root.LeftChild = newNode
-			newNode.Parent = root
+func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
+	if newNode.Value < currentNode.Value {
+		if currentNode.LeftChild == nil {
+			currentNode.LeftChild = newNode
+			newNode.Parent = currentNode
 		} else {
-			root = root.LeftChild
-			insertNode(root, newNode)
+			insertNode(currentNode.LeftChild, newNode)
 		}
-	} else if root.RightChild == nil {
-		root.RightChild = newNode
-		newNode.Parent = root
+	} else if currentNode.RightChild == nil {
+		currentNode.RightChild = newNode
+		newNode.Parent = currentNode
 	} else {
-		root = root.RightChild
-		insertNode(root, newNode)
+		insertNode(currentNode.RightChild, newNode)
 	}
 }
 
