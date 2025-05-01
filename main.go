@@ -117,6 +117,14 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 	} else {
 		insertNode(currentNode.RightChild, newNode)
 	}
+
+	//Need to set height when returning from recursive call
+	updateHeight(currentNode)
+
+	//if height > 1 || height < -1 then need to rebalance
+	if currentNode.Height > 1 || currentNode.Height < -1 {
+		println("Need to rebalance")
+	}
 }
 
 func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
@@ -171,4 +179,24 @@ func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 			return
 		}
 	}
+}
+
+func updateHeight[T constraints.Ordered](n *Node[T]) {
+	if n != nil {
+		n.Height = 1 + max(height(n.LeftChild), height(n.RightChild))
+	}
+}
+
+func max(a int, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func height[T constraints.Ordered](n *Node[T]) int {
+	if n == nil {
+		return 0
+	}
+	return n.Height
 }
