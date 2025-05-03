@@ -110,21 +110,43 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 			newNode.Parent = currentNode
 		} else {
 			insertNode(currentNode.LeftChild, newNode)
+			return
 		}
 	} else if currentNode.RightChild == nil {
 		currentNode.RightChild = newNode
 		newNode.Parent = currentNode
 	} else {
 		insertNode(currentNode.RightChild, newNode)
+		return
 	}
 
 	//Need to set height when returning from recursive call
 	updateHeight(currentNode)
 
-	//if height > 1 || height < -1 then need to rebalance
-	if currentNode.Height > 1 || currentNode.Height < -1 {
-		println("Need to rebalance")
+	balanceFactor := balanceFactor(currentNode.LeftChild.Height, currentNode.RightChild.Height)
+
+	//Out of balance on left
+	if balanceFactor < -1 {
+
+		//LL - Single Right Rotation
+		if newNode.Value < currentNode.LeftChild.Value {
+			rightRotation(currentNode)
+		} else {
+
+		}
+		//Out of balance in right
+	} else if balanceFactor > 1 {
+
+		//RR - Single Left Rotation
+		if newNode.Value > currentNode.RightChild.Value {
+			leftRotation(currentNode)
+
+		} else {
+
+		}
+
 	}
+
 }
 
 func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
@@ -199,4 +221,15 @@ func height[T constraints.Ordered](n *Node[T]) int {
 		return 0
 	}
 	return n.Height
+}
+func balanceFactor(r int, l int) int {
+	return r - l
+}
+
+func rightRotation[T int](currentNode *Node[T]) {
+
+}
+
+func leftRotation[T int](currentNode *Node[T]) {
+
 }
