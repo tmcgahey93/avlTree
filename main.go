@@ -64,9 +64,9 @@ func main() {
 		fmt.Println("You entered:", searchNum)
 	}
 
-	searchSlice := []*Node[int]{rootNode}
+	//searchSlice := []*Node[int]{rootNode}
 
-	breadthSearch(searchSlice, searchNum)
+	//breadthSearch(searchSlice, searchNum)
 
 	depthSearch(rootNode, searchNum)
 }
@@ -110,14 +110,12 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 			newNode.Parent = currentNode
 		} else {
 			insertNode(currentNode.LeftChild, newNode)
-			return
 		}
 	} else if currentNode.RightChild == nil {
 		currentNode.RightChild = newNode
 		newNode.Parent = currentNode
 	} else {
 		insertNode(currentNode.RightChild, newNode)
-		return
 	}
 
 	//Need to set height when returning from recursive call
@@ -125,11 +123,14 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 
 	balanceFactor := balanceFactor(currentNode)
 
+	fmt.Println("BF :", balanceFactor)
+
 	//Out of balance on left
 	if balanceFactor < -1 {
 
 		//LL - Single Right Rotation
 		if newNode.Value < currentNode.LeftChild.Value {
+			fmt.Println("Rotating Right")
 			rightRotation(currentNode)
 		} else {
 
@@ -206,6 +207,8 @@ func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 func updateHeight[T constraints.Ordered](n *Node[T]) {
 	if n != nil {
 		n.Height = 1 + max(height(n.LeftChild), height(n.RightChild))
+		fmt.Println("Node: ", n.Value)
+		fmt.Println("Height: ", n.Height)
 	}
 }
 
@@ -226,8 +229,15 @@ func balanceFactor[T int](n *Node[T]) int {
 	if n == nil {
 		return 0
 	}
+	fmt.Println("Calc BF: ", n.Value)
 
-	return height(n.LeftChild) - height(n.RightChild)
+	if n.RightChild == nil {
+		return (-1 - height(n.LeftChild))
+	} else if n.LeftChild == nil {
+		return (1 + height(n.RightChild))
+	} else {
+		return height(n.RightChild) - height(n.LeftChild)
+	}
 }
 
 func rightRotation[T int](currentNode *Node[T]) {
@@ -239,6 +249,8 @@ func rightRotation[T int](currentNode *Node[T]) {
 		} else {
 			currentNode.Parent.LeftChild = currentNode.LeftChild
 		}
+	} else {
+		//Need to make left child the new root node
 	}
 	currentNode.LeftChild.RightChild = currentNode
 }
