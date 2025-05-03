@@ -228,6 +228,7 @@ func balanceFactor(r int, l int) int {
 
 func rightRotation[T int](currentNode *Node[T]) {
 
+	//Not the root node
 	if currentNode.Parent != nil {
 		if currentNode.Parent.RightChild == currentNode {
 			currentNode.Parent.RightChild = currentNode.LeftChild
