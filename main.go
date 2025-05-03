@@ -123,7 +123,7 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 	//Need to set height when returning from recursive call
 	updateHeight(currentNode)
 
-	balanceFactor := balanceFactor(currentNode.LeftChild.Height, currentNode.RightChild.Height)
+	balanceFactor := balanceFactor(currentNode)
 
 	//Out of balance on left
 	if balanceFactor < -1 {
@@ -134,13 +134,13 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 		} else {
 
 		}
-		//Out of balance in right
+
+		//Out of balance on right
 	} else if balanceFactor > 1 {
 
 		//RR - Single Left Rotation
 		if newNode.Value > currentNode.RightChild.Value {
 			leftRotation(currentNode)
-
 		} else {
 
 		}
@@ -222,8 +222,12 @@ func height[T constraints.Ordered](n *Node[T]) int {
 	}
 	return n.Height
 }
-func balanceFactor(r int, l int) int {
-	return r - l
+func balanceFactor[T int](n *Node[T]) int {
+	if n == nil {
+		return 0
+	}
+
+	return height(n.LeftChild) - height(n.RightChild)
 }
 
 func rightRotation[T int](currentNode *Node[T]) {
