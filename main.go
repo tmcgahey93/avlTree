@@ -48,6 +48,7 @@ func main() {
 		}
 
 		insertNode(rootNode, node)
+		fmt.Println("rootNode after insert: ", rootNode.Value)
 
 	}
 
@@ -132,6 +133,7 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 		if newNode.Value < currentNode.LeftChild.Value {
 			fmt.Println("Rotating Right")
 			rightRotation(currentNode)
+			fmt.Println("Root Node returning from function: ", currentNode.Value)
 		} else {
 
 		}
@@ -242,6 +244,8 @@ func balanceFactor[T int](n *Node[T]) int {
 
 func rightRotation[T int](currentNode *Node[T]) {
 
+	holdNode := currentNode
+
 	//Not the root node
 	if currentNode.Parent != nil {
 		if currentNode.Parent.RightChild == currentNode {
@@ -251,8 +255,12 @@ func rightRotation[T int](currentNode *Node[T]) {
 		}
 	} else {
 		//Need to make left child the new root node
+		//Current Node becomes the right child of the new root node
+		//The new root node still has its same left child
+		currentNode = holdNode.LeftChild
+		currentNode.RightChild = holdNode
+		fmt.Println("New root node after rotation: ", currentNode.Value)
 	}
-	currentNode.LeftChild.RightChild = currentNode
 }
 
 func leftRotation[T int](currentNode *Node[T]) {
