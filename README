@@ -1,3 +1,2 @@
-4/29/2025 - Remaining Tasks: Implement balancing for avl tree
-
-4/30/2025 - Remaining Tasks: Need to revisit height logic. Always a positive height value
+4/29/2025 - Current Task: Implement balancing for avl tree
+5/09/2025 - Current Task: Need the ability to update the root node after RightRotation
