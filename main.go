@@ -46,6 +46,9 @@ func main() {
 			rootNode = node
 			continue
 		}
+		//passing the address of the rootNode to the insertNode routine
+		//I want the insertNode routine to be able to update the address that rootNode points to
+		//This is in case the tree needs to be rebalanced
 		insertNode(rootNode, node)
 		fmt.Println("rootNode: ", rootNode.Value)
 	}
