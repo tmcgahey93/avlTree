@@ -47,6 +47,7 @@ func main() {
 			continue
 		}
 		insertNode(rootNode, node)
+		fmt.Println("rootNode: ", rootNode.Value)
 	}
 
 	reader := bufio.NewReader(os.Stdin)
@@ -61,8 +62,6 @@ func main() {
 	} else {
 		fmt.Println("You entered:", searchNum)
 	}
-
-	//searchSlice := []*Node[int]{rootNode}
 
 	//breadthSearch(searchSlice, searchNum)
 
@@ -219,6 +218,7 @@ func height[T constraints.Ordered](n *Node[T]) int {
 	}
 	return n.Height
 }
+
 func balanceFactor[T int](n *Node[T]) int {
 	if n == nil {
 		return 0
