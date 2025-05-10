@@ -46,10 +46,7 @@ func main() {
 			rootNode = node
 			continue
 		}
-
 		insertNode(rootNode, node)
-		fmt.Println("rootNode after insert: ", rootNode.Value)
-
 	}
 
 	reader := bufio.NewReader(os.Stdin)
@@ -124,15 +121,12 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 
 	balanceFactor := balanceFactor(currentNode)
 
-	fmt.Println("BF :", balanceFactor)
-
 	//Out of balance on left
 	if balanceFactor < -1 {
-
 		//LL - Single Right Rotation
 		if newNode.Value < currentNode.LeftChild.Value {
 			fmt.Println("Rotating Right")
-			rightRotation(currentNode)
+			currentNode = rightRotation(currentNode)
 			fmt.Println("Root Node returning from function: ", currentNode.Value)
 		} else {
 
@@ -143,13 +137,13 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 
 		//RR - Single Left Rotation
 		if newNode.Value > currentNode.RightChild.Value {
+			fmt.Println("Rotating Left")
 			leftRotation(currentNode)
 		} else {
 
 		}
 
 	}
-
 }
 
 func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
@@ -209,8 +203,6 @@ func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 func updateHeight[T constraints.Ordered](n *Node[T]) {
 	if n != nil {
 		n.Height = 1 + max(height(n.LeftChild), height(n.RightChild))
-		fmt.Println("Node: ", n.Value)
-		fmt.Println("Height: ", n.Height)
 	}
 }
 
@@ -242,7 +234,7 @@ func balanceFactor[T int](n *Node[T]) int {
 	}
 }
 
-func rightRotation[T int](currentNode *Node[T]) {
+func rightRotation[T int](currentNode *Node[T]) *Node[T] {
 
 	holdNode := currentNode
 
@@ -259,8 +251,10 @@ func rightRotation[T int](currentNode *Node[T]) {
 		//The new root node still has its same left child
 		currentNode = holdNode.LeftChild
 		currentNode.RightChild = holdNode
-		fmt.Println("New root node after rotation: ", currentNode.Value)
+		holdNode.Parent = currentNode
 	}
+
+	return currentNode
 }
 
 func leftRotation[T int](currentNode *Node[T]) {
