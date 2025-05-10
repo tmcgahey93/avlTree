@@ -142,7 +142,6 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) *Node[T] {
 		} else {
 
 		}
-
 	}
 
 	return currentNode
@@ -226,7 +225,6 @@ func balanceFactor[T int](n *Node[T]) int {
 	if n == nil {
 		return 0
 	}
-	fmt.Println("Calc BF: ", n.Value)
 
 	if n.RightChild == nil {
 		return (-1 - height(n.LeftChild))
@@ -256,6 +254,8 @@ func rightRotation[T int](currentNode *Node[T]) *Node[T] {
 		currentNode.RightChild = holdNode
 		holdNode.Parent = currentNode
 	}
+
+	//need to recalc heights
 
 	return currentNode
 }
