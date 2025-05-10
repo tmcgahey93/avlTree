@@ -46,10 +46,8 @@ func main() {
 			rootNode = node
 			continue
 		}
-		//passing the address of the rootNode to the insertNode routine
-		//I want the insertNode routine to be able to update the address that rootNode points to
-		//This is in case the tree needs to be rebalanced
-		insertNode(rootNode, node)
+
+		rootNode = insertNode(rootNode, node)
 		fmt.Println("rootNode: ", rootNode.Value)
 	}
 
@@ -103,7 +101,7 @@ func readFile(filename string) ([]int, error) {
 	return numbers, nil
 }
 
-func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
+func insertNode[T int](currentNode *Node[T], newNode *Node[T]) *Node[T] {
 	if newNode.Value < currentNode.Value {
 		if currentNode.LeftChild == nil {
 			currentNode.LeftChild = newNode
@@ -146,6 +144,8 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) {
 		}
 
 	}
+
+	return currentNode
 }
 
 func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
@@ -179,7 +179,7 @@ func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 	fmt.Printf("Depth Search Current Value: %v\n", currentNode.Value)
 
 	if currentNode.Value == searchNum {
-		fmt.Printf("Depth Search Value Not Found: %v\n", searchNum)
+		fmt.Printf("Depth Search Value Found!: %v\n", searchNum)
 		return //need to return search path
 	} else if searchNum < currentNode.Value {
 		//Traverse left branch
@@ -260,6 +260,26 @@ func rightRotation[T int](currentNode *Node[T]) *Node[T] {
 	return currentNode
 }
 
-func leftRotation[T int](currentNode *Node[T]) {
+func leftRotation[T int](currentNode *Node[T]) *Node[T] {
+
+	holdNode := currentNode
+
+	//Not the root node
+	if currentNode.Parent != nil {
+		if currentNode.Parent.RightChild == currentNode {
+			currentNode.Parent.RightChild = currentNode.LeftChild
+		} else {
+			currentNode.Parent.LeftChild = currentNode.LeftChild
+		}
+	} else {
+		//Need to make left child the new root node
+		//Current Node becomes the right child of the new root node
+		//The new root node still has its same left child
+		currentNode = holdNode.LeftChild
+		currentNode.RightChild = holdNode
+		holdNode.Parent = currentNode
+	}
+
+	return currentNode
 
 }
