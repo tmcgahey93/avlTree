@@ -138,7 +138,7 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) *Node[T] {
 		//RR - Single Left Rotation
 		if newNode.Value > currentNode.RightChild.Value {
 			fmt.Println("Rotating Left")
-			leftRotation(currentNode)
+			currentNode = leftRotation(currentNode)
 		} else {
 
 		}
@@ -266,17 +266,17 @@ func leftRotation[T int](currentNode *Node[T]) *Node[T] {
 
 	//Not the root node
 	if currentNode.Parent != nil {
-		if currentNode.Parent.RightChild == currentNode {
-			currentNode.Parent.RightChild = currentNode.LeftChild
+		if currentNode.Parent.LeftChild == currentNode {
+			currentNode.Parent.LeftChild = currentNode.RightChild
 		} else {
-			currentNode.Parent.LeftChild = currentNode.LeftChild
+			currentNode.Parent.RightChild = currentNode.RightChild
 		}
 	} else {
-		//Need to make left child the new root node
-		//Current Node becomes the right child of the new root node
-		//The new root node still has its same left child
-		currentNode = holdNode.LeftChild
-		currentNode.RightChild = holdNode
+		//Need to make right child the new root node
+		//Current Node becomes the left child of the new root node
+		//The new root node still has its same right child
+		currentNode = holdNode.RightChild
+		currentNode.LeftChild = holdNode
 		holdNode.Parent = currentNode
 	}
 
