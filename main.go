@@ -229,43 +229,45 @@ func height[T constraints.Ordered](n *Node[T]) int {
 }
 
 func balanceFactor[T int](n *Node[T]) int {
+
+	var h int
+
 	if n == nil {
 		return 0
 	}
 
 	if n.RightChild == nil {
-		return (-1 - height(n.LeftChild))
+		h = (-1 - height(n.LeftChild))
 	} else if n.LeftChild == nil {
-		return (1 + height(n.RightChild))
+		h = (1 + height(n.RightChild))
 	} else {
-		return height(n.RightChild) - height(n.LeftChild)
+		h = height(n.RightChild) - height(n.LeftChild)
 	}
+
+	return h
 }
 
-func rightRotation[T int](currentNode *Node[T]) *Node[T] {
+func rightRotation[T int](z *Node[T]) *Node[T] {
 
-	holdNode := currentNode
+	holdNode := z
 
 	//Not the root node
-	if currentNode.Parent != nil {
-		if currentNode.Parent.RightChild == currentNode {
-			currentNode.Parent.RightChild = currentNode.LeftChild
+	if z.Parent != nil {
+		if z.Parent.RightChild == z {
+			z.Parent.RightChild = z.LeftChild
 		} else {
-			currentNode.Parent.LeftChild = currentNode.LeftChild
+			z.Parent.LeftChild = z.LeftChild
 		}
 	} else {
 		//Need to make left child the new root node
 		//Current Node becomes the right child of the new root node
 		//The new root node still has its same left child
-		currentNode = holdNode.LeftChild
-		currentNode.RightChild = holdNode
-		holdNode.Parent = currentNode
+		z = holdNode.LeftChild
+		z.RightChild = holdNode
+		holdNode.Parent = z
 	}
 
-	//need to recalc height
-	currentNode.RightChild.Height = currentNode.RightChild.Height - 1
-
-	return currentNode
+	return z
 }
 
 func leftRotation[T int](currentNode *Node[T]) *Node[T] {
