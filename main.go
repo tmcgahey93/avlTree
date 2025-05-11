@@ -130,18 +130,25 @@ func insertNode[T int](currentNode *Node[T], newNode *Node[T]) *Node[T] {
 			fmt.Println("Root Node returning from function: ", currentNode.Value)
 		} else {
 
+			//LR
+
 		}
+
+		updateHeight(currentNode)
 
 		//Out of balance on right
 	} else if balanceFactor > 1 {
-
 		//RR - Single Left Rotation
 		if newNode.Value > currentNode.RightChild.Value {
 			fmt.Println("Rotating Left")
 			currentNode = leftRotation(currentNode)
 		} else {
 
+			//RL
+
 		}
+
+		updateHeight(currentNode)
 	}
 
 	return currentNode
@@ -255,7 +262,8 @@ func rightRotation[T int](currentNode *Node[T]) *Node[T] {
 		holdNode.Parent = currentNode
 	}
 
-	//need to recalc heights
+	//need to recalc height
+	currentNode.RightChild.Height = currentNode.RightChild.Height - 1
 
 	return currentNode
 }
