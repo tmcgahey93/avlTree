@@ -10,12 +10,12 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-type Node[T any] struct {
+type node[T any] struct {
 	Value      T
 	Height     int
-	Parent     *Node[T]
-	RightChild *Node[T]
-	LeftChild  *Node[T]
+	Parent     *node[T]
+	RightChild *node[T]
+	LeftChild  *node[T]
 }
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 
 	fmt.Println(numberSlice)
 
-	var rootNode *Node[int]
+	var rootNode *node[int]
 
 	for i := 0; i < len(numberSlice); i++ {
 
@@ -94,52 +94,53 @@ func readFile(filename string) ([]int, error) {
 }
 
 // Recursive AVL insert
-func insertNode[T int](node *Node[T], value T) *Node[T] {
-	if node == nil {
-		return &Node[T]{Value: value, Height: 1}
+func insertNode[T int](n *node[T], value T) *node[T] {
+
+	if n == nil {
+		return &node[T]{Value: value, Height: 1}
 	}
 
-	if value < node.Value {
-		node.LeftChild = insertNode(node.LeftChild, value)
-	} else if value > node.Value {
-		node.RightChild = insertNode(node.RightChild, value)
+	if value < n.Value {
+		n.LeftChild = insertNode(n.LeftChild, value)
+	} else if value > n.Value {
+		n.RightChild = insertNode(n.RightChild, value)
 	} else {
 		// Duplicate values not allowed
-		return node
+		return n
 	}
 
 	// Update height
-	node.Height = 1 + max(height(node.LeftChild), height(node.RightChild))
+	n.Height = 1 + max(height(n.LeftChild), height(n.RightChild))
 
 	// Check balance
-	balance := getBalance(node)
+	balance := getBalance(n)
 
 	// Left Left
-	if balance > 1 && value < node.LeftChild.Value {
-		return rightRotation(node)
+	if balance > 1 && value < n.LeftChild.Value {
+		return rightRotation(n)
 	}
 
 	// Right Right
-	if balance < -1 && value > node.RightChild.Value {
-		return leftRotation(node)
+	if balance < -1 && value > n.RightChild.Value {
+		return leftRotation(n)
 	}
 
 	// Left Right
-	if balance > 1 && value > node.LeftChild.Value {
-		node.LeftChild = leftRotation(node.LeftChild)
-		return rightRotation(node)
+	if balance > 1 && value > n.LeftChild.Value {
+		n.LeftChild = leftRotation(n.LeftChild)
+		return rightRotation(n)
 	}
 
 	// Right Left
-	if balance < -1 && value < node.RightChild.Value {
-		node.RightChild = rightRotation(node.RightChild)
-		return leftRotation(node)
+	if balance < -1 && value < n.RightChild.Value {
+		n.RightChild = rightRotation(n.RightChild)
+		return leftRotation(n)
 	}
 
-	return node
+	return n
 }
 
-func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
+func breadthSearch[T constraints.Ordered](searchSlice []*node[T], searchNum T) {
 
 	if len(searchSlice) == 0 {
 		fmt.Printf("Breadth Search Value Not Found: %v\n", searchNum)
@@ -165,7 +166,7 @@ func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
 	}
 }
 
-func depthSearch[T constraints.Ordered](node *Node[T], value T) {
+func depthSearch[T constraints.Ordered](node *node[T], value T) {
 
 	fmt.Printf("Depth Search Current Value: %v\n", node.Value)
 
@@ -193,7 +194,7 @@ func depthSearch[T constraints.Ordered](node *Node[T], value T) {
 	}
 }
 
-func updateHeight[T constraints.Ordered](n *Node[T]) {
+func updateHeight[T constraints.Ordered](n *node[T]) {
 	if n != nil {
 		n.Height = 1 + max(height(n.LeftChild), height(n.RightChild))
 	}
@@ -206,7 +207,7 @@ func max(a int, b int) int {
 	return b
 }
 
-func height[T constraints.Ordered](n *Node[T]) int {
+func height[T constraints.Ordered](n *node[T]) int {
 	if n == nil {
 		return 0
 	}
@@ -214,7 +215,7 @@ func height[T constraints.Ordered](n *Node[T]) int {
 }
 
 // Get balance factor
-func getBalance[T int](n *Node[T]) int {
+func getBalance[T int](n *node[T]) int {
 	if n == nil {
 		return 0
 	}
@@ -232,7 +233,7 @@ func getBalance[T int](n *Node[T]) int {
 // z := unbalancedNode
 // Right rotation
 // Perform a right rotation
-func rightRotation[T int](z *Node[T]) *Node[T] {
+func rightRotation[T int](z *node[T]) *node[T] {
 	y := z.LeftChild
 	T2 := y.RightChild
 
@@ -259,7 +260,7 @@ func rightRotation[T int](z *Node[T]) *Node[T] {
 // x := z.RightChild.RightChild
 // y := z.RightChild
 // z := unbalancedNode
-func leftRotation[T int](z *Node[T]) *Node[T] {
+func leftRotation[T int](z *node[T]) *node[T] {
 	y := z.RightChild
 	T2 := y.LeftChild
 
