@@ -165,17 +165,17 @@ func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
 	}
 }
 
-func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
+func depthSearch[T constraints.Ordered](node *Node[T], value T) {
 
-	fmt.Printf("Depth Search Current Value: %v\n", currentNode.Value)
+	fmt.Printf("Depth Search Current Value: %v\n", node.Value)
 
-	if currentNode.Value == searchNum {
-		fmt.Printf("Depth Search Value Found!: %v\n", searchNum)
+	if node.Value == value {
+		fmt.Printf("Depth Search Value Found!: %v\n", value)
 		return //need to return search path
-	} else if searchNum < currentNode.Value {
+	} else if value < node.Value {
 		//Traverse left branch
-		if currentNode.LeftChild != nil {
-			depthSearch(currentNode.LeftChild, searchNum)
+		if node.LeftChild != nil {
+			depthSearch(node.LeftChild, value)
 		} else {
 			//Not Found
 			fmt.Println("Depth Search Value Not Found")
@@ -183,8 +183,8 @@ func depthSearch[T constraints.Ordered](currentNode *Node[T], searchNum T) {
 		}
 	} else {
 		//Travere right branch
-		if currentNode.RightChild != nil {
-			depthSearch(currentNode.RightChild, searchNum)
+		if node.RightChild != nil {
+			depthSearch(node.RightChild, value)
 		} else {
 			//Not Found
 			fmt.Println("Depth Search Value Not Found")
