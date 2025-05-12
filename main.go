@@ -39,16 +39,8 @@ func main() {
 	var rootNode *Node[int]
 
 	for i := 0; i < len(numberSlice); i++ {
-		node := &Node[int]{Value: numberSlice[i], Height: 0}
-		fmt.Println("Node created with value:", node.Value)
 
-		if i == 0 {
-			rootNode = node
-			continue
-		}
-
-		rootNode = insertNode(rootNode, node)
-		fmt.Println("rootNode: ", rootNode.Value)
+		rootNode = insertNode(rootNode, numberSlice[i])
 	}
 
 	reader := bufio.NewReader(os.Stdin)
@@ -101,57 +93,50 @@ func readFile(filename string) ([]int, error) {
 	return numbers, nil
 }
 
-func insertNode[T int](currentNode *Node[T], newNode *Node[T]) *Node[T] {
-	if newNode.Value < currentNode.Value {
-		if currentNode.LeftChild == nil {
-			currentNode.LeftChild = newNode
-			newNode.Parent = currentNode
-		} else {
-			insertNode(currentNode.LeftChild, newNode)
-		}
-	} else if currentNode.RightChild == nil {
-		currentNode.RightChild = newNode
-		newNode.Parent = currentNode
+// Recursive AVL insert
+func insertNode[T int](node *Node[T], value T) *Node[T] {
+	if node == nil {
+		return &Node[T]{Value: value, Height: 1}
+	}
+
+	if value < node.Value {
+		node.LeftChild = insertNode(node.LeftChild, value)
+	} else if value > node.Value {
+		node.RightChild = insertNode(node.RightChild, value)
 	} else {
-		insertNode(currentNode.RightChild, newNode)
+		// Duplicate values not allowed
+		return node
 	}
 
-	//Need to set height when returning from recursive call
-	updateHeight(currentNode)
+	// Update height
+	node.Height = 1 + max(height(node.LeftChild), height(node.RightChild))
 
-	balanceFactor := balanceFactor(currentNode)
+	// Check balance
+	balance := getBalance(node)
 
-	//Out of balance on left
-	if balanceFactor < -1 {
-		//LL - Single Right Rotation
-		if newNode.Value < currentNode.LeftChild.Value {
-			fmt.Println("Rotating Right")
-			currentNode = rightRotation(currentNode)
-			fmt.Println("Root Node returning from function: ", currentNode.Value)
-		} else {
-
-			//LR
-
-		}
-
-		updateHeight(currentNode)
-
-		//Out of balance on right
-	} else if balanceFactor > 1 {
-		//RR - Single Left Rotation
-		if newNode.Value > currentNode.RightChild.Value {
-			fmt.Println("Rotating Left")
-			currentNode = leftRotation(currentNode)
-		} else {
-
-			//RL
-
-		}
-
-		updateHeight(currentNode)
+	// Left Left
+	if balance > 1 && value < node.LeftChild.Value {
+		return rightRotation(node)
 	}
 
-	return currentNode
+	// Right Right
+	if balance < -1 && value > node.RightChild.Value {
+		return leftRotation(node)
+	}
+
+	// Left Right
+	if balance > 1 && value > node.LeftChild.Value {
+		node.LeftChild = leftRotation(node.LeftChild)
+		return rightRotation(node)
+	}
+
+	// Right Left
+	if balance < -1 && value < node.RightChild.Value {
+		node.RightChild = rightRotation(node.RightChild)
+		return leftRotation(node)
+	}
+
+	return node
 }
 
 func breadthSearch[T constraints.Ordered](searchSlice []*Node[T], searchNum T) {
@@ -228,68 +213,64 @@ func height[T constraints.Ordered](n *Node[T]) int {
 	return n.Height
 }
 
-func balanceFactor[T int](n *Node[T]) int {
-
-	var h int
-
+// Get balance factor
+func getBalance[T int](n *Node[T]) int {
 	if n == nil {
 		return 0
 	}
-
-	if n.RightChild == nil {
-		h = (-1 - height(n.LeftChild))
-	} else if n.LeftChild == nil {
-		h = (1 + height(n.RightChild))
-	} else {
-		h = height(n.RightChild) - height(n.LeftChild)
-	}
-
-	return h
+	return height(n.LeftChild) - height(n.RightChild)
 }
 
+//		    z
+//		   /
+//		  y
+//		 /
+//	    x
+//
+// x := z.LeftChild.LeftChild
+// y := z.LeftChild
+// z := unbalancedNode
+// Right rotation
+// Perform a right rotation
 func rightRotation[T int](z *Node[T]) *Node[T] {
+	y := z.LeftChild
+	T2 := y.RightChild
 
-	holdNode := z
+	// Perform rotation
+	y.RightChild = z
+	z.LeftChild = T2
 
-	//Not the root node
-	if z.Parent != nil {
-		if z.Parent.RightChild == z {
-			z.Parent.RightChild = z.LeftChild
-		} else {
-			z.Parent.LeftChild = z.LeftChild
-		}
-	} else {
-		//Need to make left child the new root node
-		//Current Node becomes the right child of the new root node
-		//The new root node still has its same left child
-		z = holdNode.LeftChild
-		z.RightChild = holdNode
-		holdNode.Parent = z
-	}
+	// Update heights
+	updateHeight(z)
+	updateHeight(y)
 
-	return z
+	// Return new root
+	return y
 }
 
-func leftRotation[T int](currentNode *Node[T]) *Node[T] {
+// RR leftRotaion
+//
+//		   z
+//		    \
+//		     y
+//		      \
+//	           x
+//
+// x := z.RightChild.RightChild
+// y := z.RightChild
+// z := unbalancedNode
+func leftRotation[T int](z *Node[T]) *Node[T] {
+	y := z.RightChild
+	T2 := y.LeftChild
 
-	holdNode := currentNode
+	// Perform rotation
+	y.LeftChild = z
+	z.RightChild = T2
 
-	//Not the root node
-	if currentNode.Parent != nil {
-		if currentNode.Parent.LeftChild == currentNode {
-			currentNode.Parent.LeftChild = currentNode.RightChild
-		} else {
-			currentNode.Parent.RightChild = currentNode.RightChild
-		}
-	} else {
-		//Need to make right child the new root node
-		//Current Node becomes the left child of the new root node
-		//The new root node still has its same right child
-		currentNode = holdNode.RightChild
-		currentNode.LeftChild = holdNode
-		holdNode.Parent = currentNode
-	}
+	// Update heights
+	updateHeight(z)
+	updateHeight(y)
 
-	return currentNode
-
+	// Return new root
+	return y
 }
