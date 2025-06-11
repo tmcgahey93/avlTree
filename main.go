@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"yourmodule/avltree/avl"
-	"yourmodule/avltree/util"
+	"avlTree/avl"
+	"avlTree/util"
 )
 
 func main() {

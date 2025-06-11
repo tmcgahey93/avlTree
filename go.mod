@@ -1,5 +1,5 @@
-module github.com/tmcgahey93/avlTree
+module avlTree
 
 go 1.23.5
 
-require golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0
+require golang.org/x/exp v0.0.0-20250606033433-dcc06ee1d476
